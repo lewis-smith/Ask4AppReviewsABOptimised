@@ -16,13 +16,18 @@ Getting Started
 
 License
 -------
-Copyright 2012. [lukedurrant].
+Copyright 2012. [luke durrant].
 This library is distributed under the terms of the MIT/X11.
 
+
+
 While not required, I greatly encourage and appreciate any improvements that you make
-to this library be contributed back for the benefit of all who use Appirater.
+to this library be contributed back for the benefit of all who use it.
+the original forked code can be found at the project
+https://github.com/arashpayan/appirater
+
 
 --------------
 
 [homepage]: http://lukedurrant.com/2012/07/appirater-github-fork/
-[lukedurrant]: http://lukedurrant.com
+[luke durrant]: http://lukedurrant.com
