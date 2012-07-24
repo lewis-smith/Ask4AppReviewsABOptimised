@@ -76,7 +76,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 	
     BOOL didRetrieveFlags = SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags);
     CFRelease(defaultRouteReachability);
-	
+
     if (!didRetrieveFlags)
     {
         NSLog(@"Error. Could not recover network reachability flags");
@@ -105,18 +105,18 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 
 + (Ask4AppReviews*)sharedInstance {
-	static Ask4AppReviews *Ask4AppReviews = nil;
-	if (Ask4AppReviews == nil)
+	static Ask4AppReviews *ask = nil;
+	if (ask == nil)
 	{
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            Ask4AppReviews = [[Ask4AppReviews alloc] init];
+            ask = [[Ask4AppReviews alloc] init];
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive) name:
                 UIApplicationWillResignActiveNotification object:nil];
         });
 	}
 	
-	return Ask4AppReviews;
+	return ask;
 }
 
 - (void)showRatingAlert {
