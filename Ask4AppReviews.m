@@ -1,5 +1,5 @@
 /*
- This file is part of Ask4AppReviews (forked from Ask4AppReviews).
+ This file is part of Ask4AppReviews (forked from Appirater).
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -27,7 +27,7 @@
  * Ask4AppReviews
  *
  * Created by Luke Durrant on 7/12.
- * Ask4AppReviews (forked from Ask4AppReviews).
+ * Ask4AppReviews (forked from Appirater).
  */
 
 #import "Ask4AppReviews.h"
