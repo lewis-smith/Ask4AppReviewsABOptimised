@@ -43,6 +43,7 @@ NSString *const kAppiraterCurrentVersion			= @"kAppiraterCurrentVersion";
 NSString *const kAppiraterRatedCurrentVersion		= @"kAppiraterRatedCurrentVersion";
 NSString *const kAppiraterDeclinedToRate			= @"kAppiraterDeclinedToRate";
 NSString *const kAppiraterReminderRequestDate		= @"kAppiraterReminderRequestDate";
+NSString *const kAppiraterAppIdBundleKey            = @"AppStoreId";
 
 NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=APP_ID";
 
@@ -88,10 +89,20 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 	
 	NSURL *testURL = [NSURL URLWithString:@"http://www.apple.com/"];
 	NSURLRequest *testRequest = [NSURLRequest requestWithURL:testURL  cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:20.0];
-	NSURLConnection *testConnection = [[[NSURLConnection alloc] initWithRequest:testRequest delegate:self] autorelease];
+	NSURLConnection *testConnection = [[NSURLConnection alloc] initWithRequest:testRequest delegate:self];
 	
     return ((isReachable && !needsConnection) || nonWiFi) ? (testConnection ? YES : NO) : NO;
 }
+
+-(NSString*)appStoreAppID {
+	
+   NSString* value = [[[NSBundle mainBundle] infoDictionary] objectForKey:kAppiraterAppIdBundleKey];
+	
+   NSAssert1(value, @"Error - you have not specified %@ property in your info.plist", kAppiraterAppIdBundleKey);
+	
+   return value;
+}
+
 
 + (Appirater*)sharedInstance {
 	static Appirater *appirater = nil;
@@ -110,11 +121,11 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)showRatingAlert {
     
-	UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:APPIRATER_MESSAGE_TITLE
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_MESSAGE_TITLE
 														 message:APPIRATER_MESSAGE
 														delegate:self
 											   cancelButtonTitle:APPIRATER_CANCEL_BUTTON
-											   otherButtonTitles:APPIRATER_RATE_BUTTON, APPIRATER_RATE_LATER, nil] autorelease];
+											   otherButtonTitles:APPIRATER_RATE_BUTTON, APPIRATER_RATE_LATER, nil];
     alertView.tag = 2;
 	self.ratingAlert = alertView;
 	[alertView show];
@@ -123,11 +134,11 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)showQuestionAlert 
 {      
-    UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:APPIRATER_QUESTION_MESSAGE_TITLE
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_QUESTION_MESSAGE_TITLE
 														 message:APPIRATER_QUESTION
 														delegate:self
 											   cancelButtonTitle:APPIRATER_RATE_LATER
-											   otherButtonTitles:APPIRATER_NO, APPIRATER_YES, nil] autorelease];
+											   otherButtonTitles:APPIRATER_NO, APPIRATER_YES, nil];
     alertView.tag = 1;
 	self.questionAlert = alertView;
 	[alertView show];
@@ -382,7 +393,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 	NSLog(@"APPIRATER NOTE: iTunes App Store is not supported on the iOS simulator. Unable to open App Store page.");
 #else
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *reviewURL = [templateReviewURL stringByReplacingOccurrencesOfString:@"APP_ID" withString:[NSString stringWithFormat:@"%d", APPIRATER_APP_ID]];
+    NSString *reviewURL = [templateReviewURL stringByReplacingOccurrencesOfString:@"APP_ID" withString:[NSString stringWithFormat:@"%d", [self appStoreAppID]]];
 	[userDefaults setBool:YES forKey:kAppiraterRatedCurrentVersion];
 	[userDefaults synchronize];
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:reviewURL]];
@@ -432,7 +443,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
                 [mPicker setMessageBody:APPIRATER_EMAIL_BODY isHTML:NO];
                 
                 [theViewController presentModalViewController:mPicker animated:YES];
-                [mPicker release];
+
                 }else {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" 
                                                                     message:APPIRATER_DEVELOPER_EMAIL_ALERT

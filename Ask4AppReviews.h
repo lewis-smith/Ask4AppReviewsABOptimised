@@ -49,7 +49,6 @@ extern NSString *const kAppiraterReminderRequestDate;
 /*
  Place your Apple generated software id here.
  */
-#define APPIRATER_APP_ID				301377083
 
 #define APPIRATER_DEVELOPER_EMAIL @"contact@lukedurrant.com"
 
