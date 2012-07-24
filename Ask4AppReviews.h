@@ -1,5 +1,5 @@
 /*
- This file is part of Appirater.
+ This file is part of Ask4AppReviews.
  
  Copyright (c) 2012, Arash Payan
  All rights reserved.
@@ -38,110 +38,110 @@
 
 
 
-extern NSString *const kAppiraterFirstUseDate;
-extern NSString *const kAppiraterUseCount;
-extern NSString *const kAppiraterSignificantEventCount;
-extern NSString *const kAppiraterCurrentVersion;
-extern NSString *const kAppiraterRatedCurrentVersion;
-extern NSString *const kAppiraterDeclinedToRate;
-extern NSString *const kAppiraterReminderRequestDate;
+extern NSString *const kAsk4AppReviewsFirstUseDate;
+extern NSString *const kAsk4AppReviewsUseCount;
+extern NSString *const kAsk4AppReviewsSignificantEventCount;
+extern NSString *const kAsk4AppReviewsCurrentVersion;
+extern NSString *const kAsk4AppReviewsRatedCurrentVersion;
+extern NSString *const kAsk4AppReviewsDeclinedToRate;
+extern NSString *const kAsk4AppReviewsReminderRequestDate;
 
 /*
  Place your Apple generated software id here.
  */
 
-#define APPIRATER_DEVELOPER_EMAIL @"contact@lukedurrant.com"
+#define Ask4AppReviews_DEVELOPER_EMAIL @"contact@lukedurrant.com"
 
 
 /*
  Your localized app's name.
  */
-#define APPIRATER_LOCALIZED_APP_NAME    [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:(NSString *)kCFBundleNameKey]
+#define Ask4AppReviews_LOCALIZED_APP_NAME    [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:(NSString *)kCFBundleNameKey]
 
 /*
  Your app's name.
  */
-#define APPIRATER_APP_NAME				APPIRATER_LOCALIZED_APP_NAME ? APPIRATER_LOCALIZED_APP_NAME : [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey]
+#define Ask4AppReviews_APP_NAME				Ask4AppReviews_LOCALIZED_APP_NAME ? Ask4AppReviews_LOCALIZED_APP_NAME : [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey]
 
 /*
  This is the message your users will see once they've passed the day+launches
  threshold.
  */
-#define APPIRATER_LOCALIZED_MESSAGE     NSLocalizedString(@"If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!", nil)
-#define APPIRATER_MESSAGE				[NSString stringWithFormat:APPIRATER_LOCALIZED_MESSAGE, APPIRATER_APP_NAME]
+#define Ask4AppReviews_LOCALIZED_MESSAGE     NSLocalizedString(@"If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!", nil)
+#define Ask4AppReviews_MESSAGE				[NSString stringWithFormat:Ask4AppReviews_LOCALIZED_MESSAGE, Ask4AppReviews_APP_NAME]
 
 /*
  This is the title of the message alert that users will see.
  */
-#define APPIRATER_LOCALIZED_MESSAGE_TITLE   NSLocalizedString(@"Rate %@", nil)
-#define APPIRATER_MESSAGE_TITLE             [NSString stringWithFormat:APPIRATER_LOCALIZED_MESSAGE_TITLE, APPIRATER_APP_NAME]
+#define Ask4AppReviews_LOCALIZED_MESSAGE_TITLE   NSLocalizedString(@"Rate %@", nil)
+#define Ask4AppReviews_MESSAGE_TITLE             [NSString stringWithFormat:Ask4AppReviews_LOCALIZED_MESSAGE_TITLE, Ask4AppReviews_APP_NAME]
 
 /*
  The text of the button that rejects reviewing the app.
  */
-#define APPIRATER_CANCEL_BUTTON			NSLocalizedString(@"No, Thanks", nil)
+#define Ask4AppReviews_CANCEL_BUTTON			NSLocalizedString(@"No, Thanks", nil)
 
 /*
  Text of button that will send user to app review page.
  */
-#define APPIRATER_LOCALIZED_RATE_BUTTON NSLocalizedString(@"Rate %@", nil)
-#define APPIRATER_RATE_BUTTON			[NSString stringWithFormat:APPIRATER_LOCALIZED_RATE_BUTTON, APPIRATER_APP_NAME]
+#define Ask4AppReviews_LOCALIZED_RATE_BUTTON NSLocalizedString(@"Rate %@", nil)
+#define Ask4AppReviews_RATE_BUTTON			[NSString stringWithFormat:Ask4AppReviews_LOCALIZED_RATE_BUTTON, Ask4AppReviews_APP_NAME]
 
 
 
-#define APPIRATER_LOCALIZED_QUESTION_MESSAGE_TITLE   NSLocalizedString(@"%@ Feedback", nil)
-#define APPIRATER_QUESTION_MESSAGE_TITLE             [NSString stringWithFormat:APPIRATER_LOCALIZED_QUESTION_MESSAGE_TITLE, APPIRATER_APP_NAME]
+#define Ask4AppReviews_LOCALIZED_QUESTION_MESSAGE_TITLE   NSLocalizedString(@"%@ Feedback", nil)
+#define Ask4AppReviews_QUESTION_MESSAGE_TITLE             [NSString stringWithFormat:Ask4AppReviews_LOCALIZED_QUESTION_MESSAGE_TITLE, Ask4AppReviews_APP_NAME]
 
-#define APPIRATER_LOCALIZED_QUESTION   NSLocalizedString(@"How do you feel about %@?", nil)
-#define APPIRATER_QUESTION             [NSString stringWithFormat:APPIRATER_LOCALIZED_QUESTION, APPIRATER_APP_NAME]
+#define Ask4AppReviews_LOCALIZED_QUESTION   NSLocalizedString(@"How do you feel about %@?", nil)
+#define Ask4AppReviews_QUESTION             [NSString stringWithFormat:Ask4AppReviews_LOCALIZED_QUESTION, Ask4AppReviews_APP_NAME]
 
 
-#define APPIRATER_LOCALIZED_EMAIL_SUBJECT NSLocalizedString(@"Having issues with %@", nil)
-#define APPIRATER_EMAIL_SUBJECT			[NSString stringWithFormat:APPIRATER_LOCALIZED_EMAIL_SUBJECT, APPIRATER_APP_NAME]
+#define Ask4AppReviews_LOCALIZED_EMAIL_SUBJECT NSLocalizedString(@"Having issues with %@", nil)
+#define Ask4AppReviews_EMAIL_SUBJECT			[NSString stringWithFormat:Ask4AppReviews_LOCALIZED_EMAIL_SUBJECT, Ask4AppReviews_APP_NAME]
 
-#define APPIRATER_EMAIL_BODY NSLocalizedString(@"Please describe your issue:", nil)
+#define Ask4AppReviews_EMAIL_BODY NSLocalizedString(@"Please describe your issue:", nil)
 
-#define APPIRATER_LOCALIZED_DEVELOPER_EMAIL_ALERT NSLocalizedString(@"Your device doesn't support sending email please email %@", nil)
-#define APPIRATER_DEVELOPER_EMAIL_ALERT			[NSString stringWithFormat:APPIRATER_LOCALIZED_DEVELOPER_EMAIL_ALERT, APPIRATER_DEVELOPER_EMAIL]
+#define Ask4AppReviews_LOCALIZED_DEVELOPER_EMAIL_ALERT NSLocalizedString(@"Your device doesn't support sending email please email %@", nil)
+#define Ask4AppReviews_DEVELOPER_EMAIL_ALERT			[NSString stringWithFormat:Ask4AppReviews_LOCALIZED_DEVELOPER_EMAIL_ALERT, Ask4AppReviews_DEVELOPER_EMAIL]
  
 /*
  Text for button to say the love it (no problems)
  */
-#define APPIRATER_NO NSLocalizedString(@"I love it!", nil)
+#define Ask4AppReviews_NO NSLocalizedString(@"I love it!", nil)
 
 /*
  Text for button to say somethings not right (email).
  */
-#define APPIRATER_YES NSLocalizedString(@"Something's not quite right", nil)
+#define Ask4AppReviews_YES NSLocalizedString(@"Something's not quite right", nil)
 
 /*
  Text for button to remind the user to feedback.
  */
-#define APPIRATER_FEEDBACK NSLocalizedString(@"I have feedback", nil)
+#define Ask4AppReviews_FEEDBACK NSLocalizedString(@"I have feedback", nil)
 
 
 /*
  Text for button to remind the user to review later.
  */
-#define APPIRATER_RATE_LATER			NSLocalizedString(@"Remind me later", nil)
+#define Ask4AppReviews_RATE_LATER			NSLocalizedString(@"Remind me later", nil)
 
 /*
  Users will need to have the same version of your app installed for this many
  days before they will be prompted to rate it.
  */
-#define APPIRATER_DAYS_UNTIL_PROMPT		30		// double
+#define Ask4AppReviews_DAYS_UNTIL_PROMPT		30		// double
 
 /*
  An example of a 'use' would be if the user launched the app. Bringing the app
  into the foreground (on devices that support it) would also be considered
- a 'use'. You tell Appirater about these events using the two methods:
- [Appirater appLaunched:]
- [Appirater appEnteredForeground:]
+ a 'use'. You tell Ask4AppReviews about these events using the two methods:
+ [Ask4AppReviews appLaunched:]
+ [Ask4AppReviews appEnteredForeground:]
  
  Users need to 'use' the same version of the app this many times before
  before they will be prompted to rate it.
  */
-#define APPIRATER_USES_UNTIL_PROMPT		20		// integer
+#define Ask4AppReviews_USES_UNTIL_PROMPT		20		// integer
 
 /*
  A significant event can be anything you want to be in your app. In a
@@ -150,30 +150,30 @@ extern NSString *const kAppiraterReminderRequestDate;
  layer of filtering that can be used to make sure that only the most
  loyal of your users are being prompted to rate you on the app store.
  If you leave this at a value of -1, then this won't be a criteria
- used for rating. To tell Appirater that the user has performed
+ used for rating. To tell Ask4AppReviews that the user has performed
  a significant event, call the method:
- [Appirater userDidSignificantEvent:];
+ [Ask4AppReviews userDidSignificantEvent:];
  */
-#define APPIRATER_SIG_EVENTS_UNTIL_PROMPT	-1	// integer
+#define Ask4AppReviews_SIG_EVENTS_UNTIL_PROMPT	-1	// integer
 
 /*
  Once the rating alert is presented to the user, they might select
- 'Remind me later'. This value specifies how long (in days) Appirater
+ 'Remind me later'. This value specifies how long (in days) Ask4AppReviews
  will wait before reminding them.
  */
-#define APPIRATER_TIME_BEFORE_REMINDING		1	// double
+#define Ask4AppReviews_TIME_BEFORE_REMINDING		1	// double
 
 /*
- 'YES' will show the Appirater alert everytime. Useful for testing how your message
+ 'YES' will show the Ask4AppReviews alert everytime. Useful for testing how your message
  looks and making sure the link to your app's review page works.
  */
-#define APPIRATER_DEBUG				YES
+#define Ask4AppReviews_DEBUG				YES
 
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
 
 
-@interface Appirater : NSObject <UIAlertViewDelegate, MFMailComposeViewControllerDelegate> {
+@interface Ask4AppReviews : NSObject <UIAlertViewDelegate, MFMailComposeViewControllerDelegate> {
 
 	UIAlertView		*questionAlert;
     UIAlertView		*ratingAlert;
@@ -189,12 +189,12 @@ extern NSString *const kAppiraterReminderRequestDate;
  DEPRECATED: While still functional, it's better to use
  appLaunched:(BOOL)canPromptForRating instead.
  
- Calls [Appirater appLaunched:YES]. See appLaunched: for details of functionality.
+ Calls [Ask4AppReviews appLaunched:YES]. See appLaunched: for details of functionality.
  */
 + (void)appLaunched;
 
 /*
- Tells Appirater that the app has launched, and on devices that do NOT
+ Tells Ask4AppReviews that the app has launched, and on devices that do NOT
  support multitasking, the 'uses' count will be incremented. You should
  call this method at the end of your application delegate's
  application:didFinishLaunchingWithOptions: method.
@@ -211,7 +211,7 @@ extern NSString *const kAppiraterReminderRequestDate;
 + (void)appLaunched:(BOOL)canPromptForRating viewController:(UINavigationController*)viewController;
 
 /*
- Tells Appirater that the app was brought to the foreground on multitasking
+ Tells Ask4AppReviews that the app was brought to the foreground on multitasking
  devices. You should call this method from the application delegate's
  applicationWillEnterForeground: method.
  
@@ -227,7 +227,7 @@ extern NSString *const kAppiraterReminderRequestDate;
 
 
 /*
- Tells Appirater that the user performed a significant event. A significant
+ Tells Ask4AppReviews that the user performed a significant event. A significant
  event is whatever you want it to be. If you're app is used to make VoIP
  calls, then you might want to call this method whenever the user places
  a call. If it's a game, you might want to call this whenever the user
@@ -243,14 +243,14 @@ extern NSString *const kAppiraterReminderRequestDate;
 + (void)userDidSignificantEvent:(BOOL)canPromptForRating;
 
 /*
- Tells Appirater to open the App Store page where the user can specify a
+ Tells Ask4AppReviews to open the App Store page where the user can specify a
  rating for the app. Also records the fact that this has happened, so the
  user won't be prompted again to rate the app.
 
  The only case where you should call this directly is if your app has an
  explicit "Rate this app" command somewhere.  In all other cases, don't worry
  about calling this -- instead, just call the other functions listed above,
- and let Appirater handle the bookkeeping of deciding when to ask the user
+ and let Ask4AppReviews handle the bookkeeping of deciding when to ask the user
  whether to rate the app.
  */
 + (void)rateApp;

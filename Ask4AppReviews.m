@@ -1,5 +1,5 @@
 /*
- This file is part of Ask4AppReviews (forked from Appirater).
+ This file is part of Ask4AppReviews (forked from Ask4AppReviews).
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -27,7 +27,7 @@
  * Ask4AppReviews
  *
  * Created by Luke Durrant on 7/12.
- * Ask4AppReviews (forked from Appirater).
+ * Ask4AppReviews (forked from Ask4AppReviews).
  */
 
 #import "Ask4AppReviews.h"
@@ -36,20 +36,20 @@
 
 
 
-NSString *const kAppiraterFirstUseDate				= @"kAppiraterFirstUseDate";
-NSString *const kAppiraterUseCount					= @"kAppiraterUseCount";
-NSString *const kAppiraterSignificantEventCount		= @"kAppiraterSignificantEventCount";
-NSString *const kAppiraterCurrentVersion			= @"kAppiraterCurrentVersion";
-NSString *const kAppiraterRatedCurrentVersion		= @"kAppiraterRatedCurrentVersion";
-NSString *const kAppiraterDeclinedToRate			= @"kAppiraterDeclinedToRate";
-NSString *const kAppiraterReminderRequestDate		= @"kAppiraterReminderRequestDate";
-NSString *const kAppiraterAppIdBundleKey            = @"AppStoreId";
+NSString *const kAsk4AppReviewsFirstUseDate				= @"kAsk4AppReviewsFirstUseDate";
+NSString *const kAsk4AppReviewsUseCount					= @"kAsk4AppReviewsUseCount";
+NSString *const kAsk4AppReviewsSignificantEventCount		= @"kAsk4AppReviewsSignificantEventCount";
+NSString *const kAsk4AppReviewsCurrentVersion			= @"kAsk4AppReviewsCurrentVersion";
+NSString *const kAsk4AppReviewsRatedCurrentVersion		= @"kAsk4AppReviewsRatedCurrentVersion";
+NSString *const kAsk4AppReviewsDeclinedToRate			= @"kAsk4AppReviewsDeclinedToRate";
+NSString *const kAsk4AppReviewsReminderRequestDate		= @"kAsk4AppReviewsReminderRequestDate";
+NSString *const kAsk4AppReviewsAppIdBundleKey            = @"AppStoreId";
 
 NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=APP_ID";
 
-@interface Appirater ()
+@interface Ask4AppReviews ()
 - (BOOL)connectedToNetwork;
-+ (Appirater*)sharedInstance;
++ (Ask4AppReviews*)sharedInstance;
 - (void)showRatingAlert;
 - (void)showQuestionAlert;
 - (BOOL)ratingConditionsHaveBeenMet;
@@ -57,7 +57,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 - (void)hideRatingAlert;
 @end
 
-@implementation Appirater 
+@implementation Ask4AppReviews 
 
 @synthesize questionAlert;
 @synthesize ratingAlert;
@@ -96,36 +96,36 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 -(NSString*)appStoreAppID {
 	
-   NSString* value = [[[NSBundle mainBundle] infoDictionary] objectForKey:kAppiraterAppIdBundleKey];
+   NSString* value = [[[NSBundle mainBundle] infoDictionary] objectForKey:kAsk4AppReviewsAppIdBundleKey];
 	
-   NSAssert1(value, @"Error - you have not specified %@ property in your info.plist", kAppiraterAppIdBundleKey);
+   NSAssert1(value, @"Error - you have not specified %@ property in your info.plist", kAsk4AppReviewsAppIdBundleKey);
 	
    return value;
 }
 
 
-+ (Appirater*)sharedInstance {
-	static Appirater *appirater = nil;
-	if (appirater == nil)
++ (Ask4AppReviews*)sharedInstance {
+	static Ask4AppReviews *Ask4AppReviews = nil;
+	if (Ask4AppReviews == nil)
 	{
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            appirater = [[Appirater alloc] init];
+            Ask4AppReviews = [[Ask4AppReviews alloc] init];
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive) name:
                 UIApplicationWillResignActiveNotification object:nil];
         });
 	}
 	
-	return appirater;
+	return Ask4AppReviews;
 }
 
 - (void)showRatingAlert {
     
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_MESSAGE_TITLE
-														 message:APPIRATER_MESSAGE
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:Ask4AppReviews_MESSAGE_TITLE
+														 message:Ask4AppReviews_MESSAGE
 														delegate:self
-											   cancelButtonTitle:APPIRATER_CANCEL_BUTTON
-											   otherButtonTitles:APPIRATER_RATE_BUTTON, APPIRATER_RATE_LATER, nil];
+											   cancelButtonTitle:Ask4AppReviews_CANCEL_BUTTON
+											   otherButtonTitles:Ask4AppReviews_RATE_BUTTON, Ask4AppReviews_RATE_LATER, nil];
     alertView.tag = 2;
 	self.ratingAlert = alertView;
 	[alertView show];
@@ -134,11 +134,11 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)showQuestionAlert 
 {      
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_QUESTION_MESSAGE_TITLE
-														 message:APPIRATER_QUESTION
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:Ask4AppReviews_QUESTION_MESSAGE_TITLE
+														 message:Ask4AppReviews_QUESTION
 														delegate:self
-											   cancelButtonTitle:APPIRATER_RATE_LATER
-											   otherButtonTitles:APPIRATER_NO, APPIRATER_YES, nil];
+											   cancelButtonTitle:Ask4AppReviews_RATE_LATER
+											   otherButtonTitles:Ask4AppReviews_NO, Ask4AppReviews_YES, nil];
     alertView.tag = 1;
 	self.questionAlert = alertView;
 	[alertView show];
@@ -146,39 +146,39 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 }
 
 - (BOOL)ratingConditionsHaveBeenMet {
-	if (APPIRATER_DEBUG)
+	if (Ask4AppReviews_DEBUG)
 		return YES;
 	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	
-	NSDate *dateOfFirstLaunch = [NSDate dateWithTimeIntervalSince1970:[userDefaults doubleForKey:kAppiraterFirstUseDate]];
+	NSDate *dateOfFirstLaunch = [NSDate dateWithTimeIntervalSince1970:[userDefaults doubleForKey:kAsk4AppReviewsFirstUseDate]];
 	NSTimeInterval timeSinceFirstLaunch = [[NSDate date] timeIntervalSinceDate:dateOfFirstLaunch];
-	NSTimeInterval timeUntilRate = 60 * 60 * 24 * APPIRATER_DAYS_UNTIL_PROMPT;
+	NSTimeInterval timeUntilRate = 60 * 60 * 24 * Ask4AppReviews_DAYS_UNTIL_PROMPT;
 	if (timeSinceFirstLaunch < timeUntilRate)
 		return NO;
 	
 	// check if the app has been used enough
-	int useCount = [userDefaults integerForKey:kAppiraterUseCount];
-	if (useCount <= APPIRATER_USES_UNTIL_PROMPT)
+	int useCount = [userDefaults integerForKey:kAsk4AppReviewsUseCount];
+	if (useCount <= Ask4AppReviews_USES_UNTIL_PROMPT)
 		return NO;
 	
 	// check if the user has done enough significant events
-	int sigEventCount = [userDefaults integerForKey:kAppiraterSignificantEventCount];
-	if (sigEventCount <= APPIRATER_SIG_EVENTS_UNTIL_PROMPT)
+	int sigEventCount = [userDefaults integerForKey:kAsk4AppReviewsSignificantEventCount];
+	if (sigEventCount <= Ask4AppReviews_SIG_EVENTS_UNTIL_PROMPT)
 		return NO;
 	
 	// has the user previously declined to rate this version of the app?
-	if ([userDefaults boolForKey:kAppiraterDeclinedToRate])
+	if ([userDefaults boolForKey:kAsk4AppReviewsDeclinedToRate])
 		return NO;
 	
 	// has the user already rated the app?
-	if ([userDefaults boolForKey:kAppiraterRatedCurrentVersion])
+	if ([userDefaults boolForKey:kAsk4AppReviewsRatedCurrentVersion])
 		return NO;
 	
 	// if the user wanted to be reminded later, has enough time passed?
-	NSDate *reminderRequestDate = [NSDate dateWithTimeIntervalSince1970:[userDefaults doubleForKey:kAppiraterReminderRequestDate]];
+	NSDate *reminderRequestDate = [NSDate dateWithTimeIntervalSince1970:[userDefaults doubleForKey:kAsk4AppReviewsReminderRequestDate]];
 	NSTimeInterval timeSinceReminderRequest = [[NSDate date] timeIntervalSinceDate:reminderRequestDate];
-	NSTimeInterval timeUntilReminder = 60 * 60 * 24 * APPIRATER_TIME_BEFORE_REMINDING;
+	NSTimeInterval timeUntilReminder = 60 * 60 * 24 * Ask4AppReviews_TIME_BEFORE_REMINDING;
 	if (timeSinceReminderRequest < timeUntilReminder)
 		return NO;
 	
@@ -192,43 +192,43 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 	
 	// get the version number that we've been tracking
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *trackingVersion = [userDefaults stringForKey:kAppiraterCurrentVersion];
+	NSString *trackingVersion = [userDefaults stringForKey:kAsk4AppReviewsCurrentVersion];
 	if (trackingVersion == nil)
 	{
 		trackingVersion = version;
-		[userDefaults setObject:version forKey:kAppiraterCurrentVersion];
+		[userDefaults setObject:version forKey:kAsk4AppReviewsCurrentVersion];
 	}
 	
-	if (APPIRATER_DEBUG)
-		NSLog(@"APPIRATER Tracking version: %@", trackingVersion);
+	if (Ask4AppReviews_DEBUG)
+		NSLog(@"Ask4AppReviews Tracking version: %@", trackingVersion);
 	
 	if ([trackingVersion isEqualToString:version])
 	{
 		// check if the first use date has been set. if not, set it.
-		NSTimeInterval timeInterval = [userDefaults doubleForKey:kAppiraterFirstUseDate];
+		NSTimeInterval timeInterval = [userDefaults doubleForKey:kAsk4AppReviewsFirstUseDate];
 		if (timeInterval == 0)
 		{
 			timeInterval = [[NSDate date] timeIntervalSince1970];
-			[userDefaults setDouble:timeInterval forKey:kAppiraterFirstUseDate];
+			[userDefaults setDouble:timeInterval forKey:kAsk4AppReviewsFirstUseDate];
 		}
 		
 		// increment the use count
-		int useCount = [userDefaults integerForKey:kAppiraterUseCount];
+		int useCount = [userDefaults integerForKey:kAsk4AppReviewsUseCount];
 		useCount++;
-		[userDefaults setInteger:useCount forKey:kAppiraterUseCount];
-		if (APPIRATER_DEBUG)
-			NSLog(@"APPIRATER Use count: %d", useCount);
+		[userDefaults setInteger:useCount forKey:kAsk4AppReviewsUseCount];
+		if (Ask4AppReviews_DEBUG)
+			NSLog(@"Ask4AppReviews Use count: %d", useCount);
 	}
 	else
 	{
 		// it's a new version of the app, so restart tracking
-		[userDefaults setObject:version forKey:kAppiraterCurrentVersion];
-		[userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAppiraterFirstUseDate];
-		[userDefaults setInteger:1 forKey:kAppiraterUseCount];
-		[userDefaults setInteger:0 forKey:kAppiraterSignificantEventCount];
-		[userDefaults setBool:NO forKey:kAppiraterRatedCurrentVersion];
-		[userDefaults setBool:NO forKey:kAppiraterDeclinedToRate];
-		[userDefaults setDouble:0 forKey:kAppiraterReminderRequestDate];
+		[userDefaults setObject:version forKey:kAsk4AppReviewsCurrentVersion];
+		[userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAsk4AppReviewsFirstUseDate];
+		[userDefaults setInteger:1 forKey:kAsk4AppReviewsUseCount];
+		[userDefaults setInteger:0 forKey:kAsk4AppReviewsSignificantEventCount];
+		[userDefaults setBool:NO forKey:kAsk4AppReviewsRatedCurrentVersion];
+		[userDefaults setBool:NO forKey:kAsk4AppReviewsDeclinedToRate];
+		[userDefaults setDouble:0 forKey:kAsk4AppReviewsReminderRequestDate];
         
 	}
 	
@@ -241,43 +241,43 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 	
 	// get the version number that we've been tracking
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString *trackingVersion = [userDefaults stringForKey:kAppiraterCurrentVersion];
+	NSString *trackingVersion = [userDefaults stringForKey:kAsk4AppReviewsCurrentVersion];
 	if (trackingVersion == nil)
 	{
 		trackingVersion = version;
-		[userDefaults setObject:version forKey:kAppiraterCurrentVersion];
+		[userDefaults setObject:version forKey:kAsk4AppReviewsCurrentVersion];
 	}
 	
-	if (APPIRATER_DEBUG)
-		NSLog(@"APPIRATER Tracking version: %@", trackingVersion);
+	if (Ask4AppReviews_DEBUG)
+		NSLog(@"Ask4AppReviews Tracking version: %@", trackingVersion);
 	
 	if ([trackingVersion isEqualToString:version])
 	{
 		// check if the first use date has been set. if not, set it.
-		NSTimeInterval timeInterval = [userDefaults doubleForKey:kAppiraterFirstUseDate];
+		NSTimeInterval timeInterval = [userDefaults doubleForKey:kAsk4AppReviewsFirstUseDate];
 		if (timeInterval == 0)
 		{
 			timeInterval = [[NSDate date] timeIntervalSince1970];
-			[userDefaults setDouble:timeInterval forKey:kAppiraterFirstUseDate];
+			[userDefaults setDouble:timeInterval forKey:kAsk4AppReviewsFirstUseDate];
 		}
 		
 		// increment the significant event count
-		int sigEventCount = [userDefaults integerForKey:kAppiraterSignificantEventCount];
+		int sigEventCount = [userDefaults integerForKey:kAsk4AppReviewsSignificantEventCount];
 		sigEventCount++;
-		[userDefaults setInteger:sigEventCount forKey:kAppiraterSignificantEventCount];
-		if (APPIRATER_DEBUG)
-			NSLog(@"APPIRATER Significant event count: %d", sigEventCount);
+		[userDefaults setInteger:sigEventCount forKey:kAsk4AppReviewsSignificantEventCount];
+		if (Ask4AppReviews_DEBUG)
+			NSLog(@"Ask4AppReviews Significant event count: %d", sigEventCount);
 	}
 	else
 	{
 		// it's a new version of the app, so restart tracking
-		[userDefaults setObject:version forKey:kAppiraterCurrentVersion];
-		[userDefaults setDouble:0 forKey:kAppiraterFirstUseDate];
-		[userDefaults setInteger:0 forKey:kAppiraterUseCount];
-		[userDefaults setInteger:1 forKey:kAppiraterSignificantEventCount];
-		[userDefaults setBool:NO forKey:kAppiraterRatedCurrentVersion];
-		[userDefaults setBool:NO forKey:kAppiraterDeclinedToRate];
-		[userDefaults setDouble:0 forKey:kAppiraterReminderRequestDate];
+		[userDefaults setObject:version forKey:kAsk4AppReviewsCurrentVersion];
+		[userDefaults setDouble:0 forKey:kAsk4AppReviewsFirstUseDate];
+		[userDefaults setInteger:0 forKey:kAsk4AppReviewsUseCount];
+		[userDefaults setInteger:1 forKey:kAsk4AppReviewsSignificantEventCount];
+		[userDefaults setBool:NO forKey:kAsk4AppReviewsRatedCurrentVersion];
+		[userDefaults setBool:NO forKey:kAsk4AppReviewsDeclinedToRate];
+		[userDefaults setDouble:0 forKey:kAsk4AppReviewsReminderRequestDate];
 	}
 	
 	[userDefaults synchronize];
@@ -295,9 +295,9 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
                            //If they have been asked before and said remind me take them straight to the rating alert
 
                            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-                           double kAppiraterReminder = [userDefaults doubleForKey:kAppiraterReminderRequestDate];
+                           double kAsk4AppReviewsReminder = [userDefaults doubleForKey:kAsk4AppReviewsReminderRequestDate];
                            
-                           if(kAppiraterReminder == 0 || APPIRATER_DEBUG)
+                           if(kAsk4AppReviewsReminder == 0 || Ask4AppReviews_DEBUG)
                            {
                                [self showQuestionAlert];
                            }else{
@@ -317,9 +317,9 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         dispatch_async(dispatch_get_main_queue(),
                        ^{
                            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-                           double kAppiraterReminder = [userDefaults doubleForKey:kAppiraterReminderRequestDate];
+                           double kAsk4AppReviewsReminder = [userDefaults doubleForKey:kAsk4AppReviewsReminderRequestDate];
                            
-                           if(kAppiraterReminder == 0 || APPIRATER_DEBUG)
+                           if(kAsk4AppReviewsReminder == 0 || Ask4AppReviews_DEBUG)
                            {
                                [self showQuestionAlert];
                            }else{
@@ -330,13 +330,13 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 }
 
 + (void)appLaunched {
-	[Appirater appLaunched:YES];
+	[Ask4AppReviews appLaunched:YES];
 }
 
 + (void)appLaunched:(BOOL)canPromptForRating  {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
                    ^{
-                       [[Appirater sharedInstance] incrementAndRate:canPromptForRating];
+                       [[Ask4AppReviews sharedInstance] incrementAndRate:canPromptForRating];
                    });
 }
 
@@ -344,24 +344,24 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 + (void)appLaunched:(BOOL)canPromptForRating viewController:(UINavigationController*)viewController {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
                    ^{
-                       [[Appirater sharedInstance] setTheViewController:viewController];
+                       [[Ask4AppReviews sharedInstance] setTheViewController:viewController];
                        
-                       [[Appirater sharedInstance] incrementAndRate:canPromptForRating];
+                       [[Ask4AppReviews sharedInstance] incrementAndRate:canPromptForRating];
                        
                    });
 }
 
 - (void)hideRatingAlert {
 	if (self.ratingAlert.visible) {
-		if (APPIRATER_DEBUG)
-			NSLog(@"APPIRATER Hiding Alert");
+		if (Ask4AppReviews_DEBUG)
+			NSLog(@"Ask4AppReviews Hiding Alert");
         
 		[self.ratingAlert dismissWithClickedButtonIndex:-1 animated:NO];
         
 	}	
     if (self.questionAlert.visible) {
-		if (APPIRATER_DEBUG)
-			NSLog(@"APPIRATER questionAlert Alert");
+		if (Ask4AppReviews_DEBUG)
+			NSLog(@"Ask4AppReviews questionAlert Alert");
         
 		[self.questionAlert dismissWithClickedButtonIndex:-1 animated:NO];
         
@@ -369,32 +369,32 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 }
 
 + (void)appWillResignActive {
-	if (APPIRATER_DEBUG)
-		NSLog(@"APPIRATER appWillResignActive");
-	[[Appirater sharedInstance] hideRatingAlert];
+	if (Ask4AppReviews_DEBUG)
+		NSLog(@"Ask4AppReviews appWillResignActive");
+	[[Ask4AppReviews sharedInstance] hideRatingAlert];
 }
 
 + (void)appEnteredForeground:(BOOL)canPromptForRating {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
                    ^{
-                       [[Appirater sharedInstance] incrementAndRate:canPromptForRating];
+                       [[Ask4AppReviews sharedInstance] incrementAndRate:canPromptForRating];
                    });
 }
 
 + (void)userDidSignificantEvent:(BOOL)canPromptForRating {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
                    ^{
-                       [[Appirater sharedInstance] incrementSignificantEventAndRate:canPromptForRating];
+                       [[Ask4AppReviews sharedInstance] incrementSignificantEventAndRate:canPromptForRating];
                    });
 }
 
 + (void)rateApp {
 #if TARGET_IPHONE_SIMULATOR
-	NSLog(@"APPIRATER NOTE: iTunes App Store is not supported on the iOS simulator. Unable to open App Store page.");
+	NSLog(@"Ask4AppReviews NOTE: iTunes App Store is not supported on the iOS simulator. Unable to open App Store page.");
 #else
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *reviewURL = [templateReviewURL stringByReplacingOccurrencesOfString:@"APP_ID" withString:[NSString stringWithFormat:@"%d", [self appStoreAppID]]];
-	[userDefaults setBool:YES forKey:kAppiraterRatedCurrentVersion];
+	[userDefaults setBool:YES forKey:kAsk4AppReviewsRatedCurrentVersion];
 	[userDefaults synchronize];
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:reviewURL]];
 #endif
@@ -416,7 +416,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
             case 0:
             {
                 // remind them later
-                [userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAppiraterReminderRequestDate];
+                [userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAsk4AppReviewsReminderRequestDate];
                 [userDefaults synchronize];
                 
                 break;
@@ -435,25 +435,25 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
                 MFMailComposeViewController *mPicker = [[MFMailComposeViewController alloc] init];
                 mPicker.mailComposeDelegate = self;
                 
-                [mPicker setSubject:APPIRATER_EMAIL_SUBJECT];
+                [mPicker setSubject:Ask4AppReviews_EMAIL_SUBJECT];
                 
-                NSArray *toRecipients = [NSArray arrayWithObject:APPIRATER_DEVELOPER_EMAIL]; 
+                NSArray *toRecipients = [NSArray arrayWithObject:Ask4AppReviews_DEVELOPER_EMAIL]; 
                 
                 [mPicker setToRecipients:toRecipients];
-                [mPicker setMessageBody:APPIRATER_EMAIL_BODY isHTML:NO];
+                [mPicker setMessageBody:Ask4AppReviews_EMAIL_BODY isHTML:NO];
                 
                 [theViewController presentModalViewController:mPicker animated:YES];
 
                 }else {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" 
-                                                                    message:APPIRATER_DEVELOPER_EMAIL_ALERT
+                                                                    message:Ask4AppReviews_DEVELOPER_EMAIL_ALERT
                                                                    delegate:nil 
                                                           cancelButtonTitle:@"OK" 
                                                           otherButtonTitles: nil];
                     [alert show];
                 }
                 //We dont want them to rate it
-                [userDefaults setBool:YES forKey:kAppiraterDeclinedToRate];
+                [userDefaults setBool:YES forKey:kAsk4AppReviewsDeclinedToRate];
                 [userDefaults synchronize];
                 
                 
@@ -474,7 +474,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
             case 0:
             {
                 // they don't want to rate it
-                [userDefaults setBool:YES forKey:kAppiraterDeclinedToRate];
+                [userDefaults setBool:YES forKey:kAsk4AppReviewsDeclinedToRate];
                 [userDefaults synchronize];
                 
                 break;
@@ -482,12 +482,12 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
             case 1:
             {
                 // they want to rate it
-                [Appirater rateApp];
+                [Ask4AppReviews rateApp];
                 break;
             }
             case 2:
                 // remind them later
-                [userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAppiraterReminderRequestDate];
+                [userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAsk4AppReviewsReminderRequestDate];
                 [userDefaults synchronize];
                 break;
             default:
