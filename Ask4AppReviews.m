@@ -49,6 +49,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 @interface Ask4AppReviews ()
 - (BOOL)connectedToNetwork;
++ (NSString*)appStoreAppID;
 + (Ask4AppReviews*)sharedInstance;
 - (void)showRatingAlert;
 - (void)showQuestionAlert;
@@ -94,7 +95,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     return ((isReachable && !needsConnection) || nonWiFi) ? (testConnection ? YES : NO) : NO;
 }
 
--(NSString*)appStoreAppID {
++(NSString*)appStoreAppID {
 	
    NSString* value = [[[NSBundle mainBundle] infoDictionary] objectForKey:kAsk4AppReviewsAppIdBundleKey];
 	
@@ -394,6 +395,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 #else
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *reviewURL = [templateReviewURL stringByReplacingOccurrencesOfString:@"APP_ID" withString:[NSString stringWithFormat:@"%d", [self appStoreAppID]]];
+
 	[userDefaults setBool:YES forKey:kAsk4AppReviewsRatedCurrentVersion];
 	[userDefaults synchronize];
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:reviewURL]];
