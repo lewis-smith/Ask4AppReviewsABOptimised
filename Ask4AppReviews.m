@@ -44,12 +44,14 @@ NSString *const kAsk4AppReviewsRatedCurrentVersion		= @"kAsk4AppReviewsRatedCurr
 NSString *const kAsk4AppReviewsDeclinedToRate			= @"kAsk4AppReviewsDeclinedToRate";
 NSString *const kAsk4AppReviewsReminderRequestDate		= @"kAsk4AppReviewsReminderRequestDate";
 NSString *const kAsk4AppReviewsAppIdBundleKey            = @"AppStoreId";
+NSString *const kAsk4AppReviewsEmailBundleKey            = @"DeveloperEmail";
 
 NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=APP_ID";
 
 @interface Ask4AppReviews ()
 - (BOOL)connectedToNetwork;
 + (NSString*)appStoreAppID;
++ (NSString*)developerEmail;
 + (Ask4AppReviews*)sharedInstance;
 - (void)showRatingAlert;
 - (void)showQuestionAlert;
@@ -103,6 +105,17 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 	
    return value;
 }
+
++(NSString*)developerEmail {
+	
+    NSString* value = [[[NSBundle mainBundle] infoDictionary] objectForKey:kAsk4AppReviewsEmailBundleKey];
+	
+    NSAssert1(value, @"Error - you have not specified %@ property in your info.plist", kAsk4AppReviewsEmailBundleKey);
+	
+    return value;
+}
+
+
 
 
 + (Ask4AppReviews*)sharedInstance {
@@ -439,7 +452,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
                 
                 [mPicker setSubject:Ask4AppReviews_EMAIL_SUBJECT];
                 
-                NSArray *toRecipients = [NSArray arrayWithObject:Ask4AppReviews_DEVELOPER_EMAIL]; 
+                NSArray *toRecipients = [NSArray arrayWithObject:[Ask4AppReviews developerEmail]]; 
                 
                 [mPicker setToRecipients:toRecipients];
                 [mPicker setMessageBody:Ask4AppReviews_EMAIL_BODY isHTML:NO];

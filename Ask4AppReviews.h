@@ -47,13 +47,6 @@ extern NSString *const kAsk4AppReviewsDeclinedToRate;
 extern NSString *const kAsk4AppReviewsReminderRequestDate;
 
 /*
- Place your Apple generated software id here.
- */
-
-#define Ask4AppReviews_DEVELOPER_EMAIL @"contact@lukedurrant.com"
-
-
-/*
  Your localized app's name.
  */
 #define Ask4AppReviews_LOCALIZED_APP_NAME    [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:(NSString *)kCFBundleNameKey]
@@ -102,7 +95,7 @@ extern NSString *const kAsk4AppReviewsReminderRequestDate;
 #define Ask4AppReviews_EMAIL_BODY NSLocalizedString(@"Please describe your issue:", nil)
 
 #define Ask4AppReviews_LOCALIZED_DEVELOPER_EMAIL_ALERT NSLocalizedString(@"Your device doesn't support sending email please email %@", nil)
-#define Ask4AppReviews_DEVELOPER_EMAIL_ALERT			[NSString stringWithFormat:Ask4AppReviews_LOCALIZED_DEVELOPER_EMAIL_ALERT, Ask4AppReviews_DEVELOPER_EMAIL]
+#define Ask4AppReviews_DEVELOPER_EMAIL_ALERT			[NSString stringWithFormat:Ask4AppReviews_LOCALIZED_DEVELOPER_EMAIL_ALERT, [Ask4AppReviews developerEmail]]
  
 /*
  Text for button to say the love it (no problems)
