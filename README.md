@@ -12,7 +12,7 @@ Getting Started
 3. Call `[Ask4AppReviews appLaunched:YES]` at the end of your app delegate's `application:didFinishLaunchingWithOptions:` method.
 4. Call `[Ask4AppReviews appEnteredForeground:YES]` in your app delegate's `applicationWillEnterForeground:` method. and provide a navigationController for the MailComposer message to appear
 5. (OPTIONAL) Call `[Ask4AppReviews userDidSignificantEvent:YES]` when the user does something 'significant' in the app.
-6. Finally, set the `AppStoreId` in your project info.plist (AppStoreId)
+6. Finally, set the `AppStoreId` in your project info.plist (AppStoreId) and 'DeveloperEmail' which is the email which the positive feedback goes too.
 
 License
 -------
