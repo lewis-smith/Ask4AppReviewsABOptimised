@@ -1,6 +1,6 @@
 /*
  This file is part of Ask4AppReviews.
- 
+    
  Copyright (c) 2012, Arash Payan
  All rights reserved.
  
@@ -35,8 +35,7 @@
  */
 
 #import <Foundation/Foundation.h>
-
-
+#import "Ask4AppReviewsDelegate.h"
 
 extern NSString *const kAsk4AppReviewsFirstUseDate;
 extern NSString *const kAsk4AppReviewsUseCount;
@@ -46,115 +45,8 @@ extern NSString *const kAsk4AppReviewsRatedCurrentVersion;
 extern NSString *const kAsk4AppReviewsDeclinedToRate;
 extern NSString *const kAsk4AppReviewsReminderRequestDate;
 
-/*
- Your localized app's name.
- */
-#define Ask4AppReviews_LOCALIZED_APP_NAME    [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:(NSString *)kCFBundleNameKey]
-
-/*
- Your app's name.
- */
-#define Ask4AppReviews_APP_NAME				Ask4AppReviews_LOCALIZED_APP_NAME ? Ask4AppReviews_LOCALIZED_APP_NAME : [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey]
-
-/*
- This is the message your users will see once they've passed the day+launches
- threshold.
- */
-#define Ask4AppReviews_LOCALIZED_MESSAGE     NSLocalizedString(@"If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!", nil)
-#define Ask4AppReviews_MESSAGE				[NSString stringWithFormat:Ask4AppReviews_LOCALIZED_MESSAGE, Ask4AppReviews_APP_NAME]
-
-/*
- This is the title of the message alert that users will see.
- */
-#define Ask4AppReviews_LOCALIZED_MESSAGE_TITLE   NSLocalizedString(@"Rate %@", nil)
-#define Ask4AppReviews_MESSAGE_TITLE             [NSString stringWithFormat:Ask4AppReviews_LOCALIZED_MESSAGE_TITLE, Ask4AppReviews_APP_NAME]
-
-/*
- The text of the button that rejects reviewing the app.
- */
-#define Ask4AppReviews_CANCEL_BUTTON			NSLocalizedString(@"No, Thanks", nil)
-
-/*
- Text of button that will send user to app review page.
- */
-#define Ask4AppReviews_LOCALIZED_RATE_BUTTON NSLocalizedString(@"Rate %@", nil)
-#define Ask4AppReviews_RATE_BUTTON			[NSString stringWithFormat:Ask4AppReviews_LOCALIZED_RATE_BUTTON, Ask4AppReviews_APP_NAME]
-
-
-
-#define Ask4AppReviews_LOCALIZED_QUESTION_MESSAGE_TITLE   NSLocalizedString(@"%@ Feedback", nil)
-#define Ask4AppReviews_QUESTION_MESSAGE_TITLE             [NSString stringWithFormat:Ask4AppReviews_LOCALIZED_QUESTION_MESSAGE_TITLE, Ask4AppReviews_APP_NAME]
-
-#define Ask4AppReviews_LOCALIZED_QUESTION   NSLocalizedString(@"How do you feel about %@?", nil)
-#define Ask4AppReviews_QUESTION             [NSString stringWithFormat:Ask4AppReviews_LOCALIZED_QUESTION, Ask4AppReviews_APP_NAME]
-
-
-#define Ask4AppReviews_LOCALIZED_EMAIL_SUBJECT NSLocalizedString(@"Having issues with %@", nil)
-#define Ask4AppReviews_EMAIL_SUBJECT			[NSString stringWithFormat:Ask4AppReviews_LOCALIZED_EMAIL_SUBJECT, Ask4AppReviews_APP_NAME]
-
-#define Ask4AppReviews_EMAIL_BODY NSLocalizedString(@"Please describe your issue:", nil)
-
 #define Ask4AppReviews_LOCALIZED_DEVELOPER_EMAIL_ALERT NSLocalizedString(@"Your device doesn't support sending email please email %@", nil)
 #define Ask4AppReviews_DEVELOPER_EMAIL_ALERT			[NSString stringWithFormat:Ask4AppReviews_LOCALIZED_DEVELOPER_EMAIL_ALERT, [Ask4AppReviews developerEmail]]
- 
-/*
- Text for button to say the love it (no problems)
- */
-#define Ask4AppReviews_NO NSLocalizedString(@"I love it!", nil)
-
-/*
- Text for button to say somethings not right (email).
- */
-#define Ask4AppReviews_YES NSLocalizedString(@"Something's not quite right", nil)
-
-/*
- Text for button to remind the user to feedback.
- */
-#define Ask4AppReviews_FEEDBACK NSLocalizedString(@"I have feedback", nil)
-
-
-/*
- Text for button to remind the user to review later.
- */
-#define Ask4AppReviews_RATE_LATER			NSLocalizedString(@"Remind me later", nil)
-
-/*
- Users will need to have the same version of your app installed for this many
- days before they will be prompted to rate it.
- */
-#define Ask4AppReviews_DAYS_UNTIL_PROMPT		30		// double
-
-/*
- An example of a 'use' would be if the user launched the app. Bringing the app
- into the foreground (on devices that support it) would also be considered
- a 'use'. You tell Ask4AppReviews about these events using the two methods:
- [Ask4AppReviews appLaunched:]
- [Ask4AppReviews appEnteredForeground:]
- 
- Users need to 'use' the same version of the app this many times before
- before they will be prompted to rate it.
- */
-#define Ask4AppReviews_USES_UNTIL_PROMPT		20		// integer
-
-/*
- A significant event can be anything you want to be in your app. In a
- telephone app, a significant event might be placing or receiving a call.
- In a game, it might be beating a level or a boss. This is just another
- layer of filtering that can be used to make sure that only the most
- loyal of your users are being prompted to rate you on the app store.
- If you leave this at a value of -1, then this won't be a criteria
- used for rating. To tell Ask4AppReviews that the user has performed
- a significant event, call the method:
- [Ask4AppReviews userDidSignificantEvent:];
- */
-#define Ask4AppReviews_SIG_EVENTS_UNTIL_PROMPT	-1	// integer
-
-/*
- Once the rating alert is presented to the user, they might select
- 'Remind me later'. This value specifies how long (in days) Ask4AppReviews
- will wait before reminding them.
- */
-#define Ask4AppReviews_TIME_BEFORE_REMINDING		1	// double
 
 /*
  'YES' will show the Ask4AppReviews alert everytime. Useful for testing how your message
@@ -177,6 +69,113 @@ extern NSString *const kAsk4AppReviewsReminderRequestDate;
 @property(nonatomic, retain) UIAlertView *ratingAlert;
 
 @property(nonatomic, retain) UIViewController *theViewController;
+
+@property(nonatomic, weak) NSObject <Ask4AppReviewsDelegate> *delegate;
+
+/*
+ Title: First question (Do you like the app?)
+ */
+@property(nonatomic, retain) NSString *doYouLikeAppTitle;
+
+/*
+ Body: First question (Do you like the app?)
+ */
+@property(nonatomic, retain) NSString *doYouLikeAppBody;
+
+/*
+ Button: I Like It
+ */
+@property(nonatomic, retain) NSString *likeItButton;
+
+/*
+ Button: I Don't Like It
+ */
+@property(nonatomic, retain) NSString *dontLikeItButton;
+
+/*
+ Button: Ask Later
+ */
+@property(nonatomic, retain) NSString *askLaterButton;
+
+
+/*
+  Title: Will you leave a review
+ */
+@property(nonatomic, retain) NSString *askForReviewTitle;
+
+/*
+ Body: Will you leave a review
+ */
+@property(nonatomic, retain) NSString *askForReviewBody;
+
+/*
+ Button: Yes, I'll leave a review
+ */
+@property(nonatomic, retain) NSString *reviewButton;
+
+/*
+ Button: No I won't leave a review
+ */
+@property(nonatomic, retain) NSString *noButton;
+
+/*
+ Email subject, if they don't like it
+ */
+@property(nonatomic, retain) NSString *emailSubject;
+
+/*
+ Email body, if they don't like it
+ */
+@property(nonatomic, retain) NSString *emailBody;
+
+/*
+ Users will need to have the same version of your app installed for this many
+ days before they will be prompted to rate it.
+ */
+@property(nonatomic) NSInteger daysUntilPrompt;
+
+/*
+ List of days and times when a review prompt can be shown.
+ */
+@property(nonatomic, retain) NSArray *timeRanges;
+
+/*
+ An example of a 'use' would be if the user launched the app. Bringing the app
+ into the foreground (on devices that support it) would also be considered
+ a 'use'. You tell Ask4AppReviews about these events using the two methods:
+ [Ask4AppReviews appLaunched:]
+ [Ask4AppReviews appEnteredForeground:]
+ 
+ Users need to 'use' the same version of the app this many times before
+ before they will be prompted to rate it.
+ */
+@property(nonatomic) NSInteger usesUntilPrompt;
+
+/*
+ A significant event can be anything you want to be in your app. In a
+ telephone app, a significant event might be placing or receiving a call.
+ In a game, it might be beating a level or a boss. This is just another
+ layer of filtering that can be used to make sure that only the most
+ loyal of your users are being prompted to rate you on the app store.
+ If you leave this at a value of -1, then this won't be a criteria
+ used for rating. To tell Ask4AppReviews that the user has performed
+ a significant event, call the method:
+ [Ask4AppReviews userDidSignificantEvent:];
+ */
+
+@property(nonatomic) NSInteger eventsUntilPrompt;
+
+/*
+ Once the rating alert is presented to the user, they might select
+ 'Remind me later'. This value specifies how long (in days) Ask4AppReviews
+ will wait before reminding them.
+ */
+@property(nonatomic) NSInteger daysBeforeReminding;
+
+/*
+ Set the delegate if you want to know when Appirater does something
+ */
++ (void)setDelegate:(id<Ask4AppReviewsDelegate>)delegate;
 
 /*
  DEPRECATED: While still functional, it's better to use

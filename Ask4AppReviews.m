@@ -33,7 +33,7 @@
 #import "Ask4AppReviews.h"
 #import <SystemConfiguration/SCNetworkReachability.h>
 #include <netinet/in.h>
-
+#import "Ask4AppReviewsTimeRange.h"
 
 
 NSString *const kAsk4AppReviewsFirstUseDate				= @"kAsk4AppReviewsFirstUseDate";
@@ -47,6 +47,8 @@ NSString *const kAsk4AppReviewsAppIdBundleKey            = @"AppStoreId";
 NSString *const kAsk4AppReviewsEmailBundleKey            = @"DeveloperEmail";
 
 NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=APP_ID";
+
+static id<Ask4AppReviewsDelegate> _delegate;
 
 @interface Ask4AppReviews ()
 - (BOOL)connectedToNetwork;
@@ -65,6 +67,40 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 @synthesize questionAlert;
 @synthesize ratingAlert;
 @synthesize theViewController;
+
++ (void)setDelegate:(id<Ask4AppReviewsDelegate>)delegate{
+    _delegate = delegate;
+}
+
+-(id) init {
+    if (self = [super init])  {
+        
+        NSString *appName = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:(NSString *)kCFBundleNameKey];
+        
+        if (appName == nil) {
+            appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey];
+        }
+        self.doYouLikeAppTitle = [NSString stringWithFormat: @"%@ Feedback", appName];
+        self.doYouLikeAppBody = [NSString stringWithFormat: @"How do you feel about %@", appName];
+        self.likeItButton = @"It's really useful";
+        self.dontLikeItButton = @"Room for improvement";
+        self.askLaterButton = @"Ask another time";
+        
+        self.askForReviewTitle = @"Could you leave a review?";
+        self.askForReviewBody = @"Every positive review helps us keep the updates coming.";
+        self.reviewButton = [NSString stringWithFormat:@"Review %@", appName];
+        self.noButton = @"No, thank you";
+        
+        self.emailSubject = [NSString stringWithFormat:@"%@ Feedback", appName];
+        self.emailBody = @"Your feedback will help us deliver the features you need the most.";
+        
+        self.daysUntilPrompt = 30;
+        self.usesUntilPrompt = 20;
+        self.eventsUntilPrompt = -1;
+        self.daysBeforeReminding = 1;
+    }
+    return self;
+}
 
 - (BOOL)connectedToNetwork {
     // Create zero addy
@@ -115,9 +151,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     return value;
 }
 
-
-
-
 + (Ask4AppReviews*)sharedInstance {
 	static Ask4AppReviews *ask = nil;
 	if (ask == nil)
@@ -125,6 +158,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             ask = [[Ask4AppReviews alloc] init];
+            ask.delegate = _delegate;
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive) name:
                 UIApplicationWillResignActiveNotification object:nil];
         });
@@ -134,25 +168,25 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 }
 
 - (void)showRatingAlert {
-    
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:Ask4AppReviews_MESSAGE_TITLE
-														 message:Ask4AppReviews_MESSAGE
+
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:self.askForReviewTitle
+														 message:self.askForReviewBody
 														delegate:self
-											   cancelButtonTitle:Ask4AppReviews_CANCEL_BUTTON
-											   otherButtonTitles:Ask4AppReviews_RATE_BUTTON, Ask4AppReviews_RATE_LATER, nil];
+											   cancelButtonTitle:self.noButton
+											   otherButtonTitles:self.reviewButton, self.askLaterButton, nil];
     alertView.tag = 2;
 	self.ratingAlert = alertView;
 	[alertView show];
     
 }
 
-- (void)showQuestionAlert 
+- (void)showQuestionAlert
 {      
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:Ask4AppReviews_QUESTION_MESSAGE_TITLE
-														 message:Ask4AppReviews_QUESTION
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:self.doYouLikeAppTitle
+														 message:self.doYouLikeAppBody
 														delegate:self
-											   cancelButtonTitle:Ask4AppReviews_RATE_LATER
-											   otherButtonTitles:Ask4AppReviews_NO, Ask4AppReviews_YES, nil];
+											   cancelButtonTitle:self.askLaterButton
+											   otherButtonTitles:self.likeItButton, self.dontLikeItButton, nil];
     alertView.tag = 1;
 	self.questionAlert = alertView;
 	[alertView show];
@@ -167,18 +201,18 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 	
 	NSDate *dateOfFirstLaunch = [NSDate dateWithTimeIntervalSince1970:[userDefaults doubleForKey:kAsk4AppReviewsFirstUseDate]];
 	NSTimeInterval timeSinceFirstLaunch = [[NSDate date] timeIntervalSinceDate:dateOfFirstLaunch];
-	NSTimeInterval timeUntilRate = 60 * 60 * 24 * Ask4AppReviews_DAYS_UNTIL_PROMPT;
+	NSTimeInterval timeUntilRate = 60 * 60 * 24 * self.daysUntilPrompt;
 	if (timeSinceFirstLaunch < timeUntilRate)
 		return NO;
 	
 	// check if the app has been used enough
 	int useCount = [userDefaults integerForKey:kAsk4AppReviewsUseCount];
-	if (useCount <= Ask4AppReviews_USES_UNTIL_PROMPT)
+	if (useCount <= self.usesUntilPrompt)
 		return NO;
 	
 	// check if the user has done enough significant events
 	int sigEventCount = [userDefaults integerForKey:kAsk4AppReviewsSignificantEventCount];
-	if (sigEventCount <= Ask4AppReviews_SIG_EVENTS_UNTIL_PROMPT)
+	if (sigEventCount <= self.eventsUntilPrompt)
 		return NO;
 	
 	// has the user previously declined to rate this version of the app?
@@ -192,9 +226,23 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 	// if the user wanted to be reminded later, has enough time passed?
 	NSDate *reminderRequestDate = [NSDate dateWithTimeIntervalSince1970:[userDefaults doubleForKey:kAsk4AppReviewsReminderRequestDate]];
 	NSTimeInterval timeSinceReminderRequest = [[NSDate date] timeIntervalSinceDate:reminderRequestDate];
-	NSTimeInterval timeUntilReminder = 60 * 60 * 24 * Ask4AppReviews_TIME_BEFORE_REMINDING;
+	NSTimeInterval timeUntilReminder = 60 * 60 * 24 * self.daysBeforeReminding;
 	if (timeSinceReminderRequest < timeUntilReminder)
 		return NO;
+    
+    //if we are limited to prompting to a specific time, is that time now?
+    if (self.timeRanges) {
+        for (Ask4AppReviewsTimeRange *timeRange in self.timeRanges) {
+            
+            is there a days of the week list?
+                yes: for each day in the week
+                    are we in the current time?
+                    if no, return NO;
+            else
+                are we in the current time?
+                    if no, return NO;
+        
+    }
 	
 	return YES;
     
@@ -416,6 +464,15 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 }
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+    if (result == MFMailComposeResultSent) {
+        if(self.delegate && [self.delegate respondsToSelector:@selector(ask4ReviewsDidSendEmail:)]){
+            [self.delegate ask4ReviewsDidSendEmail:self];
+        }
+    } else {
+        if(self.delegate && [self.delegate respondsToSelector:@selector(ask4ReviewsDidNotSendEmail:)]){
+            [self.delegate ask4ReviewsDidNotSendEmail:self];
+        }
+    }
     [theViewController dismissModalViewControllerAnimated:YES];
 }
 
@@ -424,13 +481,18 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     if(alertView.tag == 1)
     {
         
-        //we are asking to rate, remind, or no thanks
+        //we are asking if they like the app: like, dislike, remind
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         
         switch (buttonIndex) {
             case 0:
             {
                 // remind them later
+                
+                if(self.delegate && [self.delegate respondsToSelector:@selector(ask4ReviewsDidOptToRemindLaterFromQuestion:)]){
+                    [self.delegate ask4ReviewsDidOptToRemindLaterFromQuestion:self];
+                }
+                
                 [userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAsk4AppReviewsReminderRequestDate];
                 [userDefaults synchronize];
                 
@@ -438,24 +500,34 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
             }
             case 1:
             {
-                //No
+                //like it
+                
+                if(self.delegate && [self.delegate respondsToSelector:@selector(ask4ReviewsDidAskForReview:)]){
+                    [self.delegate ask4ReviewsDidAskForReview:self];
+                }
                 [self showRatingAlert];
                 break;
             }
             case 2:
+                
                 //They have issues ask them to fill in a email question
                 //You need to include UIMessage Framework
+                
+                if(self.delegate && [self.delegate respondsToSelector:@selector(ask4ReviewsDidOpenEmailCompose:)]){
+                    [self.delegate ask4ReviewsDidOpenEmailCompose:self];
+                }
+                
                 if ([MFMailComposeViewController canSendMail])
                 {
                 MFMailComposeViewController *mPicker = [[MFMailComposeViewController alloc] init];
                 mPicker.mailComposeDelegate = self;
                 
-                [mPicker setSubject:Ask4AppReviews_EMAIL_SUBJECT];
+                [mPicker setSubject:self.emailSubject];
                 
                 NSArray *toRecipients = [NSArray arrayWithObject:[Ask4AppReviews developerEmail]]; 
                 
                 [mPicker setToRecipients:toRecipients];
-                [mPicker setMessageBody:Ask4AppReviews_EMAIL_BODY isHTML:NO];
+                [mPicker setMessageBody:self.emailBody isHTML:NO];
                 
                 [theViewController presentModalViewController:mPicker animated:YES];
 
@@ -489,6 +561,11 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
             case 0:
             {
                 // they don't want to rate it
+                
+                if(self.delegate && [self.delegate respondsToSelector:@selector(ask4ReviewsDidDeclineToReview:)]){
+                    [self.delegate ask4ReviewsDidDeclineToReview:self];
+                }
+                
                 [userDefaults setBool:YES forKey:kAsk4AppReviewsDeclinedToRate];
                 [userDefaults synchronize];
                 
@@ -497,11 +574,21 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
             case 1:
             {
                 // they want to rate it
+                
+                if(self.delegate && [self.delegate respondsToSelector:@selector(ask4ReviewsDidOptToReview:)]){
+                    [self.delegate ask4ReviewsDidOptToReview:self];
+                }
+                
                 [Ask4AppReviews rateApp];
                 break;
             }
             case 2:
                 // remind them later
+                
+                if(self.delegate && [self.delegate respondsToSelector:@selector(ask4ReviewsDidOptToRemindLaterFromPromptToReview:)]){
+                    [self.delegate ask4ReviewsDidOptToRemindLaterFromPromptToReview:self];
+                }
+                
                 [userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAsk4AppReviewsReminderRequestDate];
                 [userDefaults synchronize];
                 break;
