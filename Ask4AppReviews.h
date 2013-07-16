@@ -36,6 +36,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Ask4AppReviewsDelegate.h"
+#import "Ask4AppReviewsTimeRange.h"
 
 extern NSString *const kAsk4AppReviewsFirstUseDate;
 extern NSString *const kAsk4AppReviewsUseCount;
@@ -52,7 +53,7 @@ extern NSString *const kAsk4AppReviewsReminderRequestDate;
  'YES' will show the Ask4AppReviews alert everytime. Useful for testing how your message
  looks and making sure the link to your app's review page works.
  */
-#define Ask4AppReviews_DEBUG				YES
+#define Ask4AppReviews_DEBUG				NO
 
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
@@ -70,7 +71,7 @@ extern NSString *const kAsk4AppReviewsReminderRequestDate;
 
 @property(nonatomic, retain) UIViewController *theViewController;
 
-@property(nonatomic, weak) NSObject <Ask4AppReviewsDelegate> *delegate;
+@property(nonatomic, retain) NSObject <Ask4AppReviewsDelegate> *delegate;
 
 /*
  Title: First question (Do you like the app?)
@@ -137,7 +138,7 @@ extern NSString *const kAsk4AppReviewsReminderRequestDate;
 /*
  List of days and times when a review prompt can be shown.
  */
-@property(nonatomic, retain) NSArray *timeRanges;
+@property(nonatomic, retain) Ask4AppReviewsTimeRange *timeRange;
 
 /*
  An example of a 'use' would be if the user launched the app. Bringing the app
@@ -246,5 +247,10 @@ extern NSString *const kAsk4AppReviewsReminderRequestDate;
  whether to rate the app.
  */
 + (void)rateApp;
+
+/* Get singleton instance to apply propery changes to 
+ */
++ (Ask4AppReviews*)sharedInstance;
+
 
 @end

@@ -54,7 +54,6 @@ static id<Ask4AppReviewsDelegate> _delegate;
 - (BOOL)connectedToNetwork;
 + (NSString*)appStoreAppID;
 + (NSString*)developerEmail;
-+ (Ask4AppReviews*)sharedInstance;
 - (void)showRatingAlert;
 - (void)showQuestionAlert;
 - (BOOL)ratingConditionsHaveBeenMet;
@@ -231,21 +230,13 @@ static id<Ask4AppReviewsDelegate> _delegate;
 		return NO;
     
     //if we are limited to prompting to a specific time, is that time now?
-    if (self.timeRanges) {
-        for (Ask4AppReviewsTimeRange *timeRange in self.timeRanges) {
-            
-            is there a days of the week list?
-                yes: for each day in the week
-                    are we in the current time?
-                    if no, return NO;
-            else
-                are we in the current time?
-                    if no, return NO;
-        
+    if (self.timeRange) {
+        if (![self.timeRange isNow]) {
+            return NO;
+        }
     }
 	
 	return YES;
-    
 }
 
 - (void)incrementUseCount {
@@ -513,25 +504,24 @@ static id<Ask4AppReviewsDelegate> _delegate;
                 //They have issues ask them to fill in a email question
                 //You need to include UIMessage Framework
                 
-                if(self.delegate && [self.delegate respondsToSelector:@selector(ask4ReviewsDidOpenEmailCompose:)]){
+                if(self.delegate && [self.delegate respondsToSelector:@selector(ask4ReviewsDidOpenEmailCompose:)]) {
                     [self.delegate ask4ReviewsDidOpenEmailCompose:self];
                 }
                 
-                if ([MFMailComposeViewController canSendMail])
-                {
-                MFMailComposeViewController *mPicker = [[MFMailComposeViewController alloc] init];
-                mPicker.mailComposeDelegate = self;
-                
-                [mPicker setSubject:self.emailSubject];
-                
-                NSArray *toRecipients = [NSArray arrayWithObject:[Ask4AppReviews developerEmail]]; 
-                
-                [mPicker setToRecipients:toRecipients];
-                [mPicker setMessageBody:self.emailBody isHTML:NO];
-                
-                [theViewController presentModalViewController:mPicker animated:YES];
+                if ([MFMailComposeViewController canSendMail]) {
+                    MFMailComposeViewController *mPicker = [[MFMailComposeViewController alloc] init];
+                    mPicker.mailComposeDelegate = self;
+                    
+                    [mPicker setSubject:self.emailSubject];
+                    
+                    NSArray *toRecipients = [NSArray arrayWithObject:[Ask4AppReviews developerEmail]]; 
+                    
+                    [mPicker setToRecipients:toRecipients];
+                    [mPicker setMessageBody:self.emailBody isHTML:NO];
+                    
+                    [theViewController presentModalViewController:mPicker animated:YES];
 
-                }else {
+                } else {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" 
                                                                     message:Ask4AppReviews_DEVELOPER_EMAIL_ALERT
                                                                    delegate:nil 
@@ -542,9 +532,7 @@ static id<Ask4AppReviewsDelegate> _delegate;
                 //We dont want them to rate it
                 [userDefaults setBool:YES forKey:kAsk4AppReviewsDeclinedToRate];
                 [userDefaults synchronize];
-                
-                
-                                
+                           
                 break;
             default:
                 break;
