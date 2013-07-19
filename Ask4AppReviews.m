@@ -589,4 +589,53 @@ static id<Ask4AppReviewsDelegate> _delegate;
     
 }
 
+-(NSString*) description {
+    NSMutableString *description = [NSMutableString stringWithString:@"Debug: "];
+    if (Ask4AppReviews_DEBUG)
+		[description appendString:@"Yes"];
+    else
+        [description appendString:@"No"];
+    
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	
+	NSDate *dateOfFirstLaunch = [NSDate dateWithTimeIntervalSince1970:[userDefaults doubleForKey:kAsk4AppReviewsFirstUseDate]];
+	NSTimeInterval timeSinceFirstLaunch = [[NSDate date] timeIntervalSinceDate:dateOfFirstLaunch];
+	NSTimeInterval timeUntilRate = 60 * 60 * 24 * self.daysUntilPrompt;
+	
+    [description appendFormat:@"\nDate of first Launch: %@ Time Since First Launch: %f Time Until Rate: %f Days Until Prompt: %d", dateOfFirstLaunch, timeSinceFirstLaunch, timeUntilRate, self.daysUntilPrompt];
+    
+    if (timeSinceFirstLaunch < timeUntilRate)
+		[description appendString:@"\ntimeSinceFirstLaunch < timeUntilRate = NO - WOULD NOT PROMPT"];
+    else
+        [description appendString:@"\ntimeSinceFirstLaunch < timeUntilRate = YES"];
+	
+    [description appendFormat:@"\nUse count: %d Uses until prompt: %d", [userDefaults integerForKey:kAsk4AppReviewsUseCount], self.usesUntilPrompt];
+    
+	[description appendFormat:@"\nSig events: %d Events until prompt: %d", [userDefaults integerForKey:kAsk4AppReviewsSignificantEventCount], self.eventsUntilPrompt];
+    
+    [description appendFormat:@"\nUser already declined: %d", [userDefaults boolForKey:kAsk4AppReviewsDeclinedToRate]];
+	
+    [description appendFormat:@"\nUser already rated: %d", [userDefaults boolForKey:kAsk4AppReviewsRatedCurrentVersion]];
+	
+	// if the user wanted to be reminded later, has enough time passed?
+	NSDate *reminderRequestDate = [NSDate dateWithTimeIntervalSince1970:[userDefaults doubleForKey:kAsk4AppReviewsReminderRequestDate]];
+	NSTimeInterval timeSinceReminderRequest = [[NSDate date] timeIntervalSinceDate:reminderRequestDate];
+	NSTimeInterval timeUntilReminder = 60 * 60 * 24 * self.daysBeforeReminding;
+    
+    [description appendFormat:@"\nReminder Request date: %@ Time Since Reminder Request: %f Time Until Remind: %f Days Until Prompt: %d", reminderRequestDate, timeSinceReminderRequest, timeUntilReminder, self.daysBeforeReminding];
+    
+	if (timeSinceReminderRequest < timeUntilReminder)
+		[description appendString:@"\ntimeSinceReminderRequest < timeUntilReminder: NO - WOULD NOT PROMPT"];
+    else
+		[description appendString:@"\ntimeSinceReminderRequest < timeUntilReminder: NO"];
+    
+    [description appendFormat:@"\nTime range: %@", self.timeRange];
+    if (![self.timeRange isNow])
+        [description appendFormat:@"[timeRange isNow]: NO - WOULD NOT PROMPT"];
+    else
+        [description appendFormat:@"[timeRange isNow]: YES"];
+    
+    return description;
+}
+
 @end

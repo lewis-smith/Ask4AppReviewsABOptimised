@@ -252,5 +252,5 @@ extern NSString *const kAsk4AppReviewsReminderRequestDate;
  */
 + (Ask4AppReviews*)sharedInstance;
 
-
+-(NSString*) description;
 @end
