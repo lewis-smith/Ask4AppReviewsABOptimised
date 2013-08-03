@@ -446,7 +446,7 @@ static id<Ask4AppReviewsDelegate> _delegate;
 	NSLog(@"Ask4AppReviews NOTE: iTunes App Store is not supported on the iOS simulator. Unable to open App Store page.");
 #else
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *reviewURL = [templateReviewURL stringByReplacingOccurrencesOfString:@"APP_ID" withString:[NSString stringWithFormat:@"%d", [self appStoreAppID]]];
+    NSString *reviewURL = [templateReviewURL stringByReplacingOccurrencesOfString:@"APP_ID" withString:[NSString stringWithFormat:@"%@", [self appStoreAppID]]];
 
 	[userDefaults setBool:YES forKey:kAsk4AppReviewsRatedCurrentVersion];
 	[userDefaults synchronize];
