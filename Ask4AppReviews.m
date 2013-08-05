@@ -46,6 +46,8 @@ NSString *const kAsk4AppReviewsReminderRequestDate		= @"kAsk4AppReviewsReminderR
 NSString *const kAsk4AppReviewsAppIdBundleKey            = @"AppStoreId";
 NSString *const kAsk4AppReviewsEmailBundleKey            = @"DeveloperEmail";
 
+//                                itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=357627360
+//                                itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=579976234
 NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=APP_ID";
 
 static id<Ask4AppReviewsDelegate> _delegate;
