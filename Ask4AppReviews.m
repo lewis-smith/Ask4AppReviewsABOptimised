@@ -46,6 +46,8 @@ NSString *const kAsk4AppReviewsReminderRequestDate		= @"kAsk4AppReviewsReminderR
 NSString *const kAsk4AppReviewsAppIdBundleKey            = @"AppStoreId";
 NSString *const kAsk4AppReviewsEmailBundleKey            = @"DeveloperEmail";
 
+//                                itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=357627360
+//                                itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=579976234
 NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=APP_ID";
 
 static id<Ask4AppReviewsDelegate> _delegate;
@@ -446,7 +448,7 @@ static id<Ask4AppReviewsDelegate> _delegate;
 	NSLog(@"Ask4AppReviews NOTE: iTunes App Store is not supported on the iOS simulator. Unable to open App Store page.");
 #else
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *reviewURL = [templateReviewURL stringByReplacingOccurrencesOfString:@"APP_ID" withString:[NSString stringWithFormat:@"%d", [self appStoreAppID]]];
+    NSString *reviewURL = [templateReviewURL stringByReplacingOccurrencesOfString:@"APP_ID" withString:[NSString stringWithFormat:@"%@", [self appStoreAppID]]];
 
 	[userDefaults setBool:YES forKey:kAsk4AppReviewsRatedCurrentVersion];
 	[userDefaults synchronize];
