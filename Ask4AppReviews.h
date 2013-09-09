@@ -201,7 +201,7 @@ extern NSString *const kAsk4AppReviewsReminderRequestDate;
  */
 + (void)appLaunched:(BOOL)canPromptForRating;
 
-+ (void)appLaunched:(BOOL)canPromptForRating viewController:(UINavigationController*)viewController;
++ (void)appLaunched:(BOOL)canPromptForRating viewController:(UIViewController*)viewController;
 
 /*
  Tells Ask4AppReviews that the app was brought to the foreground on multitasking

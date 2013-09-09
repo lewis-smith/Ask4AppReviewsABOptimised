@@ -396,7 +396,7 @@ static id<Ask4AppReviewsDelegate> _delegate;
 }
 
 
-+ (void)appLaunched:(BOOL)canPromptForRating viewController:(UINavigationController*)viewController {
++ (void)appLaunched:(BOOL)canPromptForRating viewController:(UIViewController*)viewController {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
                    ^{
                        [[Ask4AppReviews sharedInstance] setTheViewController:viewController];
@@ -466,7 +466,7 @@ static id<Ask4AppReviewsDelegate> _delegate;
             [self.delegate ask4ReviewsDidNotSendEmail:self];
         }
     }
-    [theViewController dismissModalViewControllerAnimated:YES];
+    [theViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -521,7 +521,7 @@ static id<Ask4AppReviewsDelegate> _delegate;
                     [mPicker setToRecipients:toRecipients];
                     [mPicker setMessageBody:self.emailBody isHTML:NO];
                     
-                    [theViewController presentModalViewController:mPicker animated:YES];
+                    [theViewController presentViewController:mPicker animated:YES completion:nil];
 
                 } else {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" 
