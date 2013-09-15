@@ -106,7 +106,9 @@ static id<Ask4AppReviewsDelegate> _delegate;
 - (BOOL)connectedToNetwork {
     // Create zero addy
     struct sockaddr_in zeroAddress;
+#warning 64BIT: Inspect use of sizeof
     bzero(&zeroAddress, sizeof(zeroAddress));
+#warning 64BIT: Inspect use of sizeof
     zeroAddress.sin_len = sizeof(zeroAddress);
     zeroAddress.sin_family = AF_INET;
 	
@@ -207,12 +209,12 @@ static id<Ask4AppReviewsDelegate> _delegate;
 		return NO;
 	
 	// check if the app has been used enough
-	int useCount = [userDefaults integerForKey:kAsk4AppReviewsUseCount];
+	NSInteger useCount = [userDefaults integerForKey:kAsk4AppReviewsUseCount];
 	if (useCount <= self.usesUntilPrompt)
 		return NO;
 	
 	// check if the user has done enough significant events
-	int sigEventCount = [userDefaults integerForKey:kAsk4AppReviewsSignificantEventCount];
+	NSInteger sigEventCount = [userDefaults integerForKey:kAsk4AppReviewsSignificantEventCount];
 	if (sigEventCount <= self.eventsUntilPrompt)
 		return NO;
 	
@@ -268,10 +270,11 @@ static id<Ask4AppReviewsDelegate> _delegate;
 		}
 		
 		// increment the use count
-		int useCount = [userDefaults integerForKey:kAsk4AppReviewsUseCount];
+		NSInteger useCount = [userDefaults integerForKey:kAsk4AppReviewsUseCount];
 		useCount++;
 		[userDefaults setInteger:useCount forKey:kAsk4AppReviewsUseCount];
 		if (Ask4AppReviews_DEBUG)
+#warning 64BIT: Check formatting arguments
 			NSLog(@"Ask4AppReviews Use count: %d", useCount);
 	}
 	else
@@ -317,10 +320,11 @@ static id<Ask4AppReviewsDelegate> _delegate;
 		}
 		
 		// increment the significant event count
-		int sigEventCount = [userDefaults integerForKey:kAsk4AppReviewsSignificantEventCount];
+		NSInteger sigEventCount = [userDefaults integerForKey:kAsk4AppReviewsSignificantEventCount];
 		sigEventCount++;
 		[userDefaults setInteger:sigEventCount forKey:kAsk4AppReviewsSignificantEventCount];
 		if (Ask4AppReviews_DEBUG)
+#warning 64BIT: Check formatting arguments
 			NSLog(@"Ask4AppReviews Significant event count: %d", sigEventCount);
 	}
 	else
@@ -604,6 +608,7 @@ static id<Ask4AppReviewsDelegate> _delegate;
 	NSTimeInterval timeSinceFirstLaunch = [[NSDate date] timeIntervalSinceDate:dateOfFirstLaunch];
 	NSTimeInterval timeUntilRate = 60 * 60 * 24 * self.daysUntilPrompt;
 	
+#warning 64BIT: Check formatting arguments
     [description appendFormat:@"\nDate of first Launch: %@ Time Since First Launch: %f Time Until Rate: %f Days Until Prompt: %d", dateOfFirstLaunch, timeSinceFirstLaunch, timeUntilRate, self.daysUntilPrompt];
     
     if (timeSinceFirstLaunch < timeUntilRate)
@@ -611,12 +616,16 @@ static id<Ask4AppReviewsDelegate> _delegate;
     else
         [description appendString:@"\ntimeSinceFirstLaunch < timeUntilRate = YES"];
 	
+#warning 64BIT: Check formatting arguments
     [description appendFormat:@"\nUse count: %d Uses until prompt: %d", [userDefaults integerForKey:kAsk4AppReviewsUseCount], self.usesUntilPrompt];
     
+#warning 64BIT: Check formatting arguments
 	[description appendFormat:@"\nSig events: %d Events until prompt: %d", [userDefaults integerForKey:kAsk4AppReviewsSignificantEventCount], self.eventsUntilPrompt];
     
+#warning 64BIT: Check formatting arguments
     [description appendFormat:@"\nUser already declined: %d", [userDefaults boolForKey:kAsk4AppReviewsDeclinedToRate]];
 	
+#warning 64BIT: Check formatting arguments
     [description appendFormat:@"\nUser already rated: %d", [userDefaults boolForKey:kAsk4AppReviewsRatedCurrentVersion]];
 	
 	// if the user wanted to be reminded later, has enough time passed?
@@ -624,6 +633,7 @@ static id<Ask4AppReviewsDelegate> _delegate;
 	NSTimeInterval timeSinceReminderRequest = [[NSDate date] timeIntervalSinceDate:reminderRequestDate];
 	NSTimeInterval timeUntilReminder = 60 * 60 * 24 * self.daysBeforeReminding;
     
+#warning 64BIT: Check formatting arguments
     [description appendFormat:@"\nReminder Request date: %@ Time Since Reminder Request: %f Time Until Remind: %f Days Until Prompt: %d", reminderRequestDate, timeSinceReminderRequest, timeUntilReminder, self.daysBeforeReminding];
     
 	if (timeSinceReminderRequest < timeUntilReminder)

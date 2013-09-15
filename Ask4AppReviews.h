@@ -47,6 +47,7 @@ extern NSString *const kAsk4AppReviewsDeclinedToRate;
 extern NSString *const kAsk4AppReviewsReminderRequestDate;
 
 #define Ask4AppReviews_LOCALIZED_DEVELOPER_EMAIL_ALERT NSLocalizedString(@"Your device doesn't support sending email please email %@", nil)
+
 #define Ask4AppReviews_DEVELOPER_EMAIL_ALERT			[NSString stringWithFormat:Ask4AppReviews_LOCALIZED_DEVELOPER_EMAIL_ALERT, [Ask4AppReviews developerEmail]]
 
 /*
