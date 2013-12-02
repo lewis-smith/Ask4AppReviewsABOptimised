@@ -608,7 +608,6 @@ static id<Ask4AppReviewsDelegate> _delegate;
 	NSTimeInterval timeSinceFirstLaunch = [[NSDate date] timeIntervalSinceDate:dateOfFirstLaunch];
 	NSTimeInterval timeUntilRate = 60 * 60 * 24 * self.daysUntilPrompt;
 	
-#warning 64BIT: Check formatting arguments
     [description appendFormat:@"\nDate of first Launch: %@ Time Since First Launch: %f Time Until Rate: %f Days Until Prompt: %d", dateOfFirstLaunch, timeSinceFirstLaunch, timeUntilRate, self.daysUntilPrompt];
     
     if (timeSinceFirstLaunch < timeUntilRate)
@@ -616,16 +615,12 @@ static id<Ask4AppReviewsDelegate> _delegate;
     else
         [description appendString:@"\ntimeSinceFirstLaunch < timeUntilRate = YES"];
 	
-#warning 64BIT: Check formatting arguments
     [description appendFormat:@"\nUse count: %d Uses until prompt: %d", [userDefaults integerForKey:kAsk4AppReviewsUseCount], self.usesUntilPrompt];
     
-#warning 64BIT: Check formatting arguments
 	[description appendFormat:@"\nSig events: %d Events until prompt: %d", [userDefaults integerForKey:kAsk4AppReviewsSignificantEventCount], self.eventsUntilPrompt];
     
-#warning 64BIT: Check formatting arguments
     [description appendFormat:@"\nUser already declined: %d", [userDefaults boolForKey:kAsk4AppReviewsDeclinedToRate]];
 	
-#warning 64BIT: Check formatting arguments
     [description appendFormat:@"\nUser already rated: %d", [userDefaults boolForKey:kAsk4AppReviewsRatedCurrentVersion]];
 	
 	// if the user wanted to be reminded later, has enough time passed?
@@ -633,7 +628,6 @@ static id<Ask4AppReviewsDelegate> _delegate;
 	NSTimeInterval timeSinceReminderRequest = [[NSDate date] timeIntervalSinceDate:reminderRequestDate];
 	NSTimeInterval timeUntilReminder = 60 * 60 * 24 * self.daysBeforeReminding;
     
-#warning 64BIT: Check formatting arguments
     [description appendFormat:@"\nReminder Request date: %@ Time Since Reminder Request: %f Time Until Remind: %f Days Until Prompt: %d", reminderRequestDate, timeSinceReminderRequest, timeUntilReminder, self.daysBeforeReminding];
     
 	if (timeSinceReminderRequest < timeUntilReminder)
